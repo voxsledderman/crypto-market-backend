@@ -1,0 +1,36 @@
+market:
+  #currency for which the crypto will be paired with (supported: USDT, EUR, PLN, TRY, GBP, BRL)
+  #the most accurate one and recommended is the USDT
+  default-quote-currency: "USDT"
+
+  # Spread is the difference between buy price and sell price, you u can put here everything from 0.01% to 99.0%
+  spread: 0.05 #percentage
+
+  #list of crypto that will be available for purchase
+  #NOTE that if you remove any, the players won't be able to sell them if they bought them before
+  #If you want to add a crypto u have to put here their ticker, you want to add Bitcoin -> put BTC
+  tracked-cryptos:
+    - "BTC"
+    - "ETH"
+    - "SOL"
+    - "ADA"
+    - "POL"
+    - "BTC"
+    - "XRP"
+    - "DOGE"
+    - "LINK"
+    - "LTC"
+    - "PEPE"
+    - "XMR"
+    - "DAI"
+    - "BCH"
+
+# If MySQL is disabled SQLite will be used instead
+MySQL_database:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "crypto_exchange"
+  user: "root"
+  password:
+
