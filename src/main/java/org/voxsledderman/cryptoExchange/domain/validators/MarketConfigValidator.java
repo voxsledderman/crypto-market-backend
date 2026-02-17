@@ -1,11 +1,13 @@
 package org.voxsledderman.cryptoExchange.domain.validators;
 
+import lombok.extern.slf4j.Slf4j;
 import org.voxsledderman.cryptoExchange.domain.market.QuoteCurrency;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class MarketConfigValidator {
 
     public static QuoteCurrency validateCurrency(String currency){
@@ -13,7 +15,7 @@ public class MarketConfigValidator {
                 .filter(e -> e.getCurrencyTicker().equalsIgnoreCase(currency))
                 .findFirst()
                 .orElseGet(() ->{
-                    System.err.println("Unsupported currency [" + currency + "] in config.yml, using USDT");
+                    log.error("Unsupported currency [{}] in config.yml, using USDT", currency);
                     return QuoteCurrency.USD;
                 });
 
@@ -27,7 +29,7 @@ public class MarketConfigValidator {
 
     public static BigDecimal validateSpread(BigDecimal spread){
         if(!(spread.compareTo(BigDecimal.ZERO) > 0 && spread.compareTo(BigDecimal.valueOf(99.0)) < 0)){
-            System.err.println("Unsupported spread value [" + spread + "] in config.yml, using default spread (0.05%)");
+            log.error("Unsupported spread value [{}] in config.yml, using default spread (0.05%)", spread);
             return BigDecimal.valueOf(0.05);
         }
         return spread;

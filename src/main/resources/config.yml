@@ -33,4 +33,5 @@ MySQL_database:
   database: "crypto_exchange"
   user: "root"
   password:
+  maximum_connections_hikariCP: 25 #Don't change unless you know what you're doing
 

@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class TradeOrder {
-    private final UUID id;
+    private final long id;
     private String ticker;
     private BigDecimal amount;
     private BigDecimal openPrice;

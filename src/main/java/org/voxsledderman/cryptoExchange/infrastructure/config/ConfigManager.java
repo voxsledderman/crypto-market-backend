@@ -16,6 +16,8 @@ public class ConfigManager {
     private QuoteCurrency quoteCurrency;
     private List<String> trackedTickers;
     private BigDecimal spread;
+    private boolean mySqlEnabled;
+    private MySqlConnectionData mySqlConnectionData;
 
     public ConfigManager(CryptoExchangePlugin plugin) {
         this.plugin = plugin;
@@ -34,6 +36,10 @@ public class ConfigManager {
         this.quoteCurrency = MarketConfigValidator.validateCurrency(currency);
         this.trackedTickers = List.copyOf(MarketConfigValidator.validateTrackedTickers(tickers));
         this.spread = MarketConfigValidator.validateSpread(spread);
+
+        Boolean mySql = config.getBoolean("MySQL_database.enabled", false);
+
+
 
     }
 }
