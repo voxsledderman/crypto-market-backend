@@ -1,0 +1,4 @@
+name: cryptoExchange
+version: '1.0'
+main: org.voxsledderman.cryptoExchange.CryptoExchangePlugin
+api-version: '1.20'
