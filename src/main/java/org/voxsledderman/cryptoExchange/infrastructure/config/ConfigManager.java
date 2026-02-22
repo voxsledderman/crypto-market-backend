@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.voxsledderman.cryptoExchange.CryptoExchangePlugin;
 import org.voxsledderman.cryptoExchange.domain.market.QuoteCurrency;
 import org.voxsledderman.cryptoExchange.domain.validators.MarketConfigValidator;
+import org.voxsledderman.cryptoExchange.domain.validators.MySqlValidator;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,9 +38,22 @@ public class ConfigManager {
         this.trackedTickers = List.copyOf(MarketConfigValidator.validateTrackedTickers(tickers));
         this.spread = MarketConfigValidator.validateSpread(spread);
 
-        Boolean mySql = config.getBoolean("MySQL_database.enabled", false);
+        String mySqlPath = "MySQL_database";
+        mySqlEnabled = config.getBoolean(mySqlPath + ".enabled", false);
 
+        String database = config.getString(mySqlPath + ".database");
+        String host = config.getString(mySqlPath + ".host");
+        int port = config.getInt(mySqlPath +".port", 3306);
+        String user = config.getString(mySqlPath + ".user");
+        String password = config.getString(mySqlPath + ".password");
+        int maxConnections = config.getInt(mySqlPath + ".maximum_connections_hikariCP", 25);
 
+        if(mySqlEnabled){
+            mySqlConnectionData = new MySqlConnectionData(
+                    MySqlValidator.validateHost(host), port, MySqlValidator.validateDatabaseName(database), MySqlValidator.validateUser(user),
+                    password, maxConnections
+            );
+        }
 
     }
 }

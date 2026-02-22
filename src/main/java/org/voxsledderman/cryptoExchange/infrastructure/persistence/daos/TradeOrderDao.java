@@ -1,4 +1,4 @@
-package org.voxsledderman.cryptoExchange.infrastructure.persistence;
+package org.voxsledderman.cryptoExchange.infrastructure.persistence.daos;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor @NoArgsConstructor @Getter
 @DatabaseTable(tableName = "trade_orders")
-public class TradeOrderEntity {
+public class TradeOrderDao {
 
     @DatabaseField(generatedId = true)
     private long id;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "wallet_owner_uuid", canBeNull = false, index = true)
-    private WalletEntity wallet;
+    private WalletDao wallet;
 
     @DatabaseField(canBeNull = false)
     private String ticker;

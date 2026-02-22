@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 public class TradeOrder {
     private final long id;
     private String ticker;
+    private UUID walletUuid;
     private BigDecimal amount;
     private BigDecimal openPrice;
-    private LocalDateTime timestamp;
+    private LocalDateTime openTime;
 
     private BigDecimal getTradeValueOnOpen(){
         return amount.multiply(openPrice);

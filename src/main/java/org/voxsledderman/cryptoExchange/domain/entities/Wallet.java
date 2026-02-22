@@ -1,6 +1,7 @@
 package org.voxsledderman.cryptoExchange.domain.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
 
@@ -9,9 +10,10 @@ import java.util.*;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class Wallet {
     private final UUID ownerUuid;
-    private final Map<String, List<TradeOrder>> activePositions = new HashMap<>();
+    private final Map<String, List<TradeOrder>> activePositions;
 
     public void addTrade(TradeOrder order){
         activePositions.computeIfAbsent(order.getTicker(), k -> new ArrayList<>()).add(order);

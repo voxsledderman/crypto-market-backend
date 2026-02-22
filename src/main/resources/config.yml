@@ -28,9 +28,9 @@ market:
 # If MySQL is disabled SQLite will be used instead
 MySQL_database:
   enabled: false
+  database: "crypto_exchange"
   host: "localhost"
   port: 3306
-  database: "crypto_exchange"
   user: "root"
   password:
   maximum_connections_hikariCP: 25 #Don't change unless you know what you're doing
