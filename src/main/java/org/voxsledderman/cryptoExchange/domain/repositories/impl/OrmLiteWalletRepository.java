@@ -22,13 +22,26 @@ public class OrmLiteWalletRepository implements WalletRepository {
     }
 
     @Override
-    public Optional<Wallet> findByUuid(UUID uuid) throws SQLException {
-       return Optional.ofNullable(walletDao.queryForId(uuid))
-               .map(WalletMapper::fromDao);
+    public Optional<Wallet> findByUuid(UUID uuid) {
+        try {
+            return Optional.ofNullable(walletDao.queryForId(uuid))
+                    .map(WalletMapper::fromDao);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void save(Wallet wallet) throws SQLException {
-        walletDao.createOrUpdate(WalletMapper.toDao(wallet));
+    public void save(Wallet wallet) {
+        try {
+            walletDao.createOrUpdate(WalletMapper.toDao(wallet));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void invalidate(UUID uuid) {
+
     }
 }

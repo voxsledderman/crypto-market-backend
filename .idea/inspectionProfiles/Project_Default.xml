@@ -6,15 +6,18 @@
       <option name="ignoredModules">
         <list>
           <option value="cryptoExchange" />
+          <option value="cryptoExchange" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="org.apache.commons:commons-lang3:3.12.0" />
+          <option value="commons-lang:commons-lang:2.6" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
         </list>
       </option>
