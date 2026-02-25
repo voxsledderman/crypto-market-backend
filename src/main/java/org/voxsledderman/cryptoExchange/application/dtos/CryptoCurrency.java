@@ -1,4 +1,4 @@
-package org.voxsledderman.cryptoExchange.domain.entities;
+package org.voxsledderman.cryptoExchange.application.dtos;
 
 import lombok.*;
 import java.math.BigDecimal;

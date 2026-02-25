@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class TradeOrder {
-    private final long id;
+    private final Long id;
     private String ticker;
     private UUID walletUuid;
     private BigDecimal amount;
@@ -19,7 +19,7 @@ public class TradeOrder {
     private BigDecimal getTradeValueOnOpen(){
         return amount.multiply(openPrice);
     }
-    private BigDecimal getTradeValueNow(BigDecimal currentPrice){
+    public BigDecimal getTradeValueNow(BigDecimal currentPrice){
         return amount.multiply(currentPrice);
     }
     public BigDecimal getProfit(BigDecimal currentPrice){

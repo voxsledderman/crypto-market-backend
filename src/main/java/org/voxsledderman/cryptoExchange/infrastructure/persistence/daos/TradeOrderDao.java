@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class TradeOrderDao {
 
     @DatabaseField(generatedId = true)
-    private long id;
+    private Long id;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "wallet_owner_uuid", canBeNull = false, index = true)
     private WalletDao wallet;

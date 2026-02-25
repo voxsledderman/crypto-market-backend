@@ -13,7 +13,6 @@ import org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo.OrmL
 import org.voxsledderman.cryptoExchange.infrastructure.config.ApplicationBootstrap;
 import org.voxsledderman.cryptoExchange.infrastructure.config.ConfigManager;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.BinanceWebSocketProvider;
-import org.voxsledderman.cryptoExchange.service.WalletService;
 
 import java.sql.SQLException;
 
@@ -25,9 +24,6 @@ public final class CryptoExchangePlugin extends JavaPlugin {
     private ConnectionSource connectionSource;
     private WalletRepository walletRepository;
     private EconomyRepository economyRepository;
-
-
-    private WalletService walletService;
 
     @Override
     public void onEnable() {
@@ -51,8 +47,6 @@ public final class CryptoExchangePlugin extends JavaPlugin {
             return;
         }
         economyRepository = new VaultEconomyRepository(economy);
-
-        walletService = new WalletService(walletRepository);
     }
 
 

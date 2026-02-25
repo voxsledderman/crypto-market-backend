@@ -34,7 +34,7 @@ public class BinanceWebSocketProvider implements PriceProvider {
 
             WebSocketClient client = new WebSocketClient(new URI(urlBuilder.toString())) {
                 @Override
-                public void onOpen(ServerHandshake handshakedata) {
+                public void onOpen(ServerHandshake handShakeData) {
                     System.out.println("Połączono z Binance WebSocket");
                 }
 

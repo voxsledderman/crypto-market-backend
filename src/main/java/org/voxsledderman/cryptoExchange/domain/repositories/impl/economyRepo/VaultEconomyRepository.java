@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.voxsledderman.cryptoExchange.domain.repositories.EconomyRepository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Slf4j
@@ -18,23 +19,23 @@ public class VaultEconomyRepository implements EconomyRepository {
     }
 
     @Override
-    public double getBalance(UUID uuid) {
-        return economy.getBalance(getOfflinePlayer(uuid));
+    public BigDecimal getBalance(UUID uuid) {
+        return BigDecimal.valueOf(economy.getBalance(getOfflinePlayer(uuid)));
     }
 
     @Override
-    public boolean deposit(UUID uuid, double amount) {
-        return economy.depositPlayer(getOfflinePlayer(uuid), amount).transactionSuccess();
+    public boolean deposit(UUID uuid, BigDecimal amount) {
+        return economy.depositPlayer(getOfflinePlayer(uuid), amount.doubleValue()).transactionSuccess();
     }
 
     @Override
-    public boolean withdraw(UUID uuid, double amount) {
-       return economy.withdrawPlayer(getOfflinePlayer(uuid), amount).transactionSuccess();
+    public boolean withdraw(UUID uuid, BigDecimal amount) {
+       return economy.withdrawPlayer(getOfflinePlayer(uuid), amount.doubleValue()).transactionSuccess();
     }
 
     @Override
-    public boolean hasEnough(UUID uuid, double amount) {
-        return economy.has(getOfflinePlayer(uuid), amount);
+    public boolean hasEnough(UUID uuid, BigDecimal amount) {
+        return economy.has(getOfflinePlayer(uuid), amount.doubleValue());
     }
 
     private OfflinePlayer getOfflinePlayer(UUID uuid){
