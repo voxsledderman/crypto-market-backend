@@ -1,4 +1,4 @@
-package org.voxsledderman.cryptoExchange.domain.repositories.impl;
+package org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo;
 
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
 import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;

@@ -1,4 +1,4 @@
-package org.voxsledderman.cryptoExchange.domain.repositories.impl;
+package org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
