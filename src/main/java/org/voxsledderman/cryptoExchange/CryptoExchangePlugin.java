@@ -1,8 +1,14 @@
 package org.voxsledderman.cryptoExchange;
 
 import com.j256.ormlite.support.ConnectionSource;
+import dev.rollczi.litecommands.LiteCommands;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import dev.rollczi.litecommands.message.LiteMessages;
+import dev.rollczi.litecommands.scope.Scope;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.voxsledderman.cryptoExchange.domain.repositories.EconomyRepository;
@@ -13,6 +19,7 @@ import org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo.OrmL
 import org.voxsledderman.cryptoExchange.infrastructure.config.ApplicationBootstrap;
 import org.voxsledderman.cryptoExchange.infrastructure.config.ConfigManager;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.BinanceWebSocketProvider;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.command.ExchangeCommand;
 
 import java.sql.SQLException;
 
@@ -24,10 +31,10 @@ public final class CryptoExchangePlugin extends JavaPlugin {
     private ConnectionSource connectionSource;
     private WalletRepository walletRepository;
     private EconomyRepository economyRepository;
+    private LiteCommands<CommandSender> liteCommands;
 
     @Override
     public void onEnable() {
-        binanceWebSocketProvider = new BinanceWebSocketProvider(configManager.getTrackedTickers());
         ApplicationBootstrap appBootstrap = new ApplicationBootstrap(configManager, getDataFolder());
         connectionSource = appBootstrap.connectToDB();
 
@@ -47,6 +54,25 @@ public final class CryptoExchangePlugin extends JavaPlugin {
             return;
         }
         economyRepository = new VaultEconomyRepository(economy);
+        
+        this.liteCommands = LiteBukkitFactory.builder("voxsledderman", this)
+                .commands(
+                        new ExchangeCommand(configManager, binanceWebSocketProvider)
+                )
+                .message(LiteMessages.MISSING_PERMISSIONS, permission -> "§cNie masz permisji na wykonanie tej komendy!")
+                .message(LiteMessages.INVALID_USAGE, invalidUsage ->  "§cNiepoprawne użycie komendy!")
+                .build();
+
+        Bukkit.getScheduler().runTaskLater(this, () ->{
+            binanceWebSocketProvider = new BinanceWebSocketProvider(configManager.getTrackedTickers(), configManager.getQuoteCurrency());
+            this.liteCommands = LiteBukkitFactory.builder("voxsledderman", this)
+                    .commands(
+                            new ExchangeCommand(configManager, binanceWebSocketProvider)
+                    )
+                    .message(LiteMessages.MISSING_PERMISSIONS, permission -> "§cNie masz permisji na wykonanie tej komendy!")
+                    .message(LiteMessages.INVALID_USAGE, invalidUsage ->  "§cNiepoprawne użycie komendy!")
+                    .build();
+        }, 40);
     }
 
 
@@ -58,6 +84,11 @@ public final class CryptoExchangePlugin extends JavaPlugin {
             getLogger().severe("Failed to close database connection");
             throw new RuntimeException(e);
         }
+
+        if (this.liteCommands != null) {
+            this.liteCommands.unregister();
+        }
+        binanceWebSocketProvider.shutdown();
     }
 
     private Economy setupEconomy() {

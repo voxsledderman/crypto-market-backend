@@ -1,9 +1,38 @@
+commands:
+  open-exchange-menu:
+    - "exchange"
+    - "ex"
+    - "gielda"
+    - "giel"
+    - "crypto"
+
+
+
+menu:
+  tittles:
+    main-menu:
+    portfolio-opened-positions:
+    portfolio-closed-positions:
+
+  menu_type: #Defines whether the menu will be: 1 -> Paged, (page 1, 2, 3 etc.) or 2 -> Scrollable (scroll down, scroll up),
+    paged: false #if both of those values are the same, (false, false) or (true, true), the scrollable version will be used
+    scrollable: true
+  menu-sounds:
+    menu-open:
+    menu-close:
+    open-portfolio:
+    menu-click:
+    buy-crypto:
+    sell-crypto:
+
+
+
 market:
   #currency for which the crypto will be paired with (supported: USDT, EUR, PLN, TRY, GBP, BRL)
   #the most accurate one and recommended is the USDT
   default-quote-currency: "USDT"
 
-  # Spread is the difference between buy price and sell price, you u can put here everything from 0.01% to 99.0%
+  # Spread is the difference between buy price and sell price, you can put here everything from 0.01% to 99.0%
   spread: 0.05 #percentage
 
   #list of crypto that will be available for purchase

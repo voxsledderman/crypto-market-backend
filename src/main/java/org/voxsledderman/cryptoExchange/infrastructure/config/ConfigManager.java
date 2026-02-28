@@ -8,6 +8,7 @@ import org.voxsledderman.cryptoExchange.domain.validators.MarketConfigValidator;
 import org.voxsledderman.cryptoExchange.domain.validators.MySqlValidator;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,9 @@ public class ConfigManager {
     private BigDecimal spread;
     private boolean mySqlEnabled;
     private MySqlConnectionData mySqlConnectionData;
+    private List<String> commandWords;
+
+
 
     public ConfigManager(CryptoExchangePlugin plugin) {
         this.plugin = plugin;
@@ -35,7 +39,7 @@ public class ConfigManager {
         BigDecimal spread = BigDecimal.valueOf(config.getDouble("market.spread",0.5));
 
         this.quoteCurrency = MarketConfigValidator.validateCurrency(currency);
-        this.trackedTickers = List.copyOf(MarketConfigValidator.validateTrackedTickers(tickers));
+        this.trackedTickers = List.copyOf(MarketConfigValidator.validateTrackedTickers(tickers, quoteCurrency));
         this.spread = MarketConfigValidator.validateSpread(spread);
 
         String mySqlPath = "MySQL_database";

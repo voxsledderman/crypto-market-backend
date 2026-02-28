@@ -3,12 +3,15 @@ package org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
+import org.voxsledderman.cryptoExchange.domain.entities.TradeOrder;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
+import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
 import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;
 import org.voxsledderman.cryptoExchange.infrastructure.persistence.daos.WalletDao;
 import org.voxsledderman.cryptoExchange.infrastructure.persistence.mappers.WalletMapper;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

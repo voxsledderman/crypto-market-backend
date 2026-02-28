@@ -9,6 +9,4 @@ public interface WalletRepository {
     Optional<Wallet> findByUuid(UUID uuid);
     void save(Wallet wallet);
     void invalidate(UUID uuid);
-
-
 }

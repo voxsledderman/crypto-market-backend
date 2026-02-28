@@ -3,6 +3,7 @@ package org.voxsledderman.cryptoExchange.application.usecases;
 import lombok.AllArgsConstructor;
 import org.voxsledderman.cryptoExchange.domain.entities.TradeOrder;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
+import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
 import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
 import org.voxsledderman.cryptoExchange.domain.repositories.EconomyRepository;
 import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;
@@ -30,7 +31,7 @@ public class SellCryptoUseCase {
         }
 
         try {
-            wallet.removeTrade(tradeOrder);
+            tradeOrder.setPositionState(PositionState.CLOSED);
             walletRepository.save(wallet);
         } catch (Exception e){
             economyRepository.withdraw(sellerId, totalValue);

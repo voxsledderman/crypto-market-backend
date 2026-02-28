@@ -41,6 +41,7 @@ public class ApplicationBootstrap {
             return factory.getConnectionSource();
         } catch (SQLException e) {
             log.error("Unable to connect to any database!");
+            e.printStackTrace();
             throw new InternalError();
         }
     }

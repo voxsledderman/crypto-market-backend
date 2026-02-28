@@ -2,6 +2,8 @@ package org.voxsledderman.cryptoExchange.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +17,7 @@ public class TradeOrder {
     private BigDecimal amount;
     private BigDecimal openPrice;
     private LocalDateTime openTime;
+    private PositionState positionState;
 
     private BigDecimal getTradeValueOnOpen(){
         return amount.multiply(openPrice);

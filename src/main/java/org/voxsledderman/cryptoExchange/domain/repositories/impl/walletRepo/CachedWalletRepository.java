@@ -1,8 +1,11 @@
 package org.voxsledderman.cryptoExchange.domain.repositories.impl.walletRepo;
 
+import org.voxsledderman.cryptoExchange.domain.entities.TradeOrder;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
+import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
 import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;

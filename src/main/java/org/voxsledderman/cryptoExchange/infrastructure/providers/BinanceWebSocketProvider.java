@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.knowm.xchange.currency.Currency;
 import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
+import org.voxsledderman.cryptoExchange.domain.market.QuoteCurrency;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -19,8 +21,12 @@ public class BinanceWebSocketProvider implements PriceProvider {
     private final Map<String, BigDecimal> latestPrices = new ConcurrentHashMap<>();
     private final Map<String, String> latestChanges = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private WebSocketClient client;
+    private volatile boolean running = true;
+    private final QuoteCurrency quoteCurrency;
 
-    public BinanceWebSocketProvider(List<String> tickers) {
+    public BinanceWebSocketProvider(List<String> tickers, QuoteCurrency quoteCurrency) {
+        this.quoteCurrency = quoteCurrency;
         initConnection(tickers);
     }
 
@@ -32,7 +38,7 @@ public class BinanceWebSocketProvider implements PriceProvider {
                 if (i < tickers.size() - 1) urlBuilder.append("/");
             }
 
-            WebSocketClient client = new WebSocketClient(new URI(urlBuilder.toString())) {
+            this.client = new WebSocketClient(new URI(urlBuilder.toString())) {
                 @Override
                 public void onOpen(ServerHandshake handShakeData) {
                     System.out.println("Połączono z Binance WebSocket");
@@ -57,13 +63,15 @@ public class BinanceWebSocketProvider implements PriceProvider {
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    System.out.println("Połączenie przerwane! Kod: " + code + ", Powód: " + reason);
+                    System.out.println("Connection interrupted: " + code + ", Reason: " + reason);
+
+                    if (!running) return;
+
                     new Thread(() -> {
                         try {
-                            System.out.println("Próba ponownego połączenia za 5 sekund...");
+                            System.out.println("Trying to reconnect in 5 seconds...");
                             Thread.sleep(5000);
-                            reconnect();
-
+                            if (running) reconnect();
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                         }
@@ -79,7 +87,14 @@ public class BinanceWebSocketProvider implements PriceProvider {
             client.connect();
 
         } catch (Exception e) {
-            throw new RuntimeException("Nie udało się zainicjować WebSocketa", e);
+            throw new RuntimeException("Unable to initialize Websocket", e);
+        }
+    }
+
+    public void shutdown() {
+        running = false;
+        if (client != null) {
+            client.close();
         }
     }
 
@@ -97,13 +112,14 @@ public class BinanceWebSocketProvider implements PriceProvider {
                 ));
     }
 
-    public Map<String, PriceInfo> getFullMarketData(List<String> tickers) {
+    public Map<String, CryptoInfo> getFullMarketData(List<String> tickers) {
         return tickers.stream()
                 .map(String::toUpperCase)
                 .filter(latestPrices::containsKey)
                 .collect(Collectors.toMap(
                         ticker -> ticker,
-                        ticker -> new PriceInfo(latestPrices.get(ticker), latestChanges.get(ticker))
+                        ticker -> new CryptoInfo(Currency.getInstance(ticker.replace(quoteCurrency.getCurrencyTicker(), ""))
+                                .getDisplayName(),latestPrices.get(ticker), latestChanges.get(ticker))
                 ));
     }
 
@@ -120,6 +136,4 @@ public class BinanceWebSocketProvider implements PriceProvider {
         }
         return price;
     }
-
-    public record PriceInfo(BigDecimal price, String changePercent) {}
 }

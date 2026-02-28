@@ -21,9 +21,11 @@ public class MarketConfigValidator {
 
 
     }
-    public static List<String> validateTrackedTickers(List<String> tickers){
+    public static List<String> validateTrackedTickers(List<String> tickers, QuoteCurrency quoteCurrency) {
         return tickers.stream()
                 .filter(t -> t != null && !t.isBlank())
+                .map(t -> t.toUpperCase() + quoteCurrency.getCurrencyTicker())
+                .distinct()
                 .toList();
     }
 
