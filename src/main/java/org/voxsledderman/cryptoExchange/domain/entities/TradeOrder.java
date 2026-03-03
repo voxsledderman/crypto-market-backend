@@ -1,6 +1,7 @@
 package org.voxsledderman.cryptoExchange.domain.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class TradeOrder {
     private Long id;
     private String ticker;

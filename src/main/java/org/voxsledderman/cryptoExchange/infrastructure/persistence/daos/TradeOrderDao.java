@@ -5,12 +5,17 @@ import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
+import org.voxsledderman.cryptoExchange.infrastructure.persistence.persisters.LocalDateTimePersister;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor @NoArgsConstructor @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @DatabaseTable(tableName = "trade_orders")
 public class TradeOrderDao {
 
@@ -29,8 +34,8 @@ public class TradeOrderDao {
     @DatabaseField(columnName = "open_price", canBeNull = false)
     private BigDecimal openPrice;
 
-//    @DatabaseField(columnName = "open_time", canBeNull = false)
-//    private LocalDateTime openTime;
+    @DatabaseField(columnName = "open_time", canBeNull = false, persisterClass = LocalDateTimePersister.class)
+    private LocalDateTime openTime;
 
     @DatabaseField(columnName = "position_state", canBeNull = false)
     private PositionState positionState;

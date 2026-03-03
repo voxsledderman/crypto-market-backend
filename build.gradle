@@ -24,6 +24,10 @@ repositories {
     maven {
         url = 'https://jitpack.io'
     }
+
+    maven {
+        url = "https://mvn.wesjd.net/"
+    }
 }
 
 dependencies {
@@ -55,6 +59,12 @@ dependencies {
     implementation ("xyz.xenondevs.invui:invui:1.49")
 
     implementation("org.knowm.xchange:xchange-core:5.1.0")
+
+    implementation("net.wesjd:anvilgui:1.10.11-SNAPSHOT")
+
+
+    testImplementation ('org.junit.jupiter:junit-jupiter-api:5.10.0')
+    testRuntimeOnly ('org.junit.jupiter:junit-jupiter-engine:5.10.0')
 }
 
 java {
@@ -85,6 +95,14 @@ tasks {
         relocate("com.j256.ormlite", "org.voxsledderman.cryptoExchange.libs.ormlite")
         relocate("com.zaxxer.hikari", "org.voxsledderman.cryptoExchange.libs.hikari")
         relocate("dev.rollczi.litecommands", "org.voxsledderman.cryptoExchange.libs.litecommands")
+        relocate("net.wesjd.anvilgui", "org.voxsledderman.cryptoExchange.libs.anvilgui")
+
+//        dependencies {
+//            include(dependency("net.wesjd:anvilgui:.*"))
+//        }
+        test {
+            useJUnitPlatform()
+        }
     }
 }
 
