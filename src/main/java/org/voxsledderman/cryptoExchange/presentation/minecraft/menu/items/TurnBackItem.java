@@ -21,9 +21,7 @@ public class TurnBackItem extends AbstractItem {
     @Override
     public ItemProvider getItemProvider(){
         return new ItemBuilder(Material.ENDER_PEARL).setDisplayName("Open previous menu");
-
     }
-
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {

@@ -1,23 +1,16 @@
 package org.voxsledderman.cryptoExchange.presentation.minecraft.menu;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.voxsledderman.cryptoExchange.application.usecases.GetOrCreateWalletUseCase;
 import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
-import org.voxsledderman.cryptoExchange.domain.repositories.EconomyRepository;
-import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;
-import org.voxsledderman.cryptoExchange.infrastructure.config.manager.AppConfigManager;
-import org.voxsledderman.cryptoExchange.infrastructure.config.manager.MenuConfigManager;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.CryptoInfo;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.*;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
 import xyz.xenondevs.invui.gui.Gui;
 import xyz.xenondevs.invui.gui.PagedGui;
 import xyz.xenondevs.invui.gui.structure.Markers;
 import xyz.xenondevs.invui.item.Item;
-import xyz.xenondevs.invui.item.builder.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +19,12 @@ import java.util.Map;
 public class MainMenu extends Menu{
     private final Player player;
     private final PriceProvider priceProvider;
-    public MainMenu(MenuContext menuContext, Player player, PriceProvider priceProvider, JavaPlugin plugin) {
-        super(plugin, menuContext, MenuType.MAIN);
+    private final MenuFactory menuFactory;
+    public MainMenu(Player player, MenuFactory menuFactory) {
+        super(MenuType.MAIN, menuFactory);
         this.player = player;
-        this.priceProvider = priceProvider;
+        this.priceProvider = menuFactory.getPriceProvider();
+        this.menuFactory = menuFactory;
     }
 
     @Override
@@ -41,7 +36,7 @@ public class MainMenu extends Menu{
                 .stream()
                 .sorted((a, b) -> Double.compare(b.getValue().price().doubleValue(), a.getValue().price().doubleValue()))
                 .forEach(entry -> cryptoItems.add(new CryptoItem(
-                        entry.getKey(), priceProvider, getMenuContext(), getPlugin()
+                        entry.getKey(), menuFactory
                 )));
 
         return PagedGui.items()
@@ -57,7 +52,7 @@ public class MainMenu extends Menu{
                 .addIngredient('E', new CloseItem())
                 .addIngredient('<', new BackItem(false))
                 .addIngredient('>', new NextItem(true))
-                .addIngredient('P', new WalletItem(player.getUniqueId(),  priceProvider, getMenuContext(), new GetOrCreateWalletUseCase(getWalletRepository()), getPlugin()))
+                .addIngredient('P', new WalletItem(player.getUniqueId(), getMenuFactory(), new GetOrCreateWalletUseCase(getWalletRepository())))
                 .setContent(cryptoItems)
                 .build();
     }

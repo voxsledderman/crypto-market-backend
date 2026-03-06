@@ -112,7 +112,7 @@ class TradeOrderTest {
         @DisplayName("Powinien zwrócić dodatni profit gdy cena wzrosła")
         void shouldReturnPositiveProfitWhenPriceIncreased() {
             // (2.0 * 60000.00) - (2.0 * 50000.00) = 120000.00 - 100000.00 = 20000.00
-            BigDecimal profit = tradeOrder.getProfit(new BigDecimal("60000.00"));
+            BigDecimal profit = tradeOrder.getProfitOpened(new BigDecimal("60000.00"));
             assertEquals(new BigDecimal("20000.000"), profit);
         }
 
@@ -120,7 +120,7 @@ class TradeOrderTest {
         @DisplayName("Powinien zwrócić ujemny profit gdy cena spadła")
         void shouldReturnNegativeProfitWhenPriceDecreased() {
             // (2.0 * 40000.00) - (2.0 * 50000.00) = 80000.00 - 100000.00 = -20000.00
-            BigDecimal profit = tradeOrder.getProfit(new BigDecimal("40000.00"));
+            BigDecimal profit = tradeOrder.getProfitOpened(new BigDecimal("40000.00"));
             assertEquals(new BigDecimal("-20000.000"), profit);
         }
 
@@ -128,7 +128,7 @@ class TradeOrderTest {
         @DisplayName("Powinien zwrócić 0 gdy cena nie zmieniła się")
         void shouldReturnZeroProfitWhenPriceUnchanged() {
             // (2.0 * 50000.00) - (2.0 * 50000.00) = 0.00
-            BigDecimal profit = tradeOrder.getProfit(new BigDecimal("50000.00"));
+            BigDecimal profit = tradeOrder.getProfitOpened(new BigDecimal("50000.00"));
             assertEquals(new BigDecimal("0.000"), profit);
         }
 
@@ -141,7 +141,7 @@ class TradeOrderTest {
                     .build();
 
             // (0.5 * 120.00) - (0.5 * 100.00) = 60.00 - 50.00 = 10.00
-            BigDecimal profit = fractionalOrder.getProfit(new BigDecimal("120.00"));
+            BigDecimal profit = fractionalOrder.getProfitOpened(new BigDecimal("120.00"));
             assertEquals(new BigDecimal("10.0000"), profit);
         }
 
@@ -153,7 +153,7 @@ class TradeOrderTest {
                     .build();
 
             assertThrows(NullPointerException.class,
-                    () -> orderWithNullAmount.getProfit(new BigDecimal("55000.00")));
+                    () -> orderWithNullAmount.getProfitOpened(new BigDecimal("55000.00")));
         }
     }
 

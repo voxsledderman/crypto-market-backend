@@ -30,7 +30,15 @@ public class TradeOrder {
     public BigDecimal getTradeValueNow(BigDecimal currentPrice){
         return amount.multiply(currentPrice);
     }
-    public BigDecimal getProfit(BigDecimal currentPrice){
+    public BigDecimal getProfitOpened(BigDecimal currentPrice){
+        if (!isOpened()) throw new IllegalStateException("Position is closed");
         return getTradeValueNow(currentPrice).subtract(getTradeValueOnOpen());
+    }
+    public BigDecimal getProfitClosed() {
+        if (isOpened()) throw new IllegalStateException("Position is still opened");
+        return closedValue.subtract(getTradeValueOnOpen());
+    }
+    public boolean isOpened(){
+        return positionState == PositionState.OPENED;
     }
 }

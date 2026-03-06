@@ -26,7 +26,7 @@ public class WalletCalculator {
                     if (info == null || info.price() == null || trade.getPositionState() != PositionState.OPENED) {
                         return BigDecimal.ZERO;
                     }
-                    return trade.getProfit(info.price());
+                    return trade.getProfitOpened(info.price());
                 }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
@@ -79,7 +79,7 @@ public class WalletCalculator {
         return wallet.getOrders().getOrDefault(ticker, List.of()).stream()
                 .filter(Objects::nonNull)
                 .filter(trade -> trade.getPositionState() == PositionState.OPENED)
-                .map(trade -> trade.getProfit(cryptoInfo.price()))
+                .map(trade -> trade.getProfitOpened(cryptoInfo.price()))
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

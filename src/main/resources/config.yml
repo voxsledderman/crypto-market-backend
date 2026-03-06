@@ -15,6 +15,7 @@ menu:
     portfolio-closed-positions:
     admin-settings:
     buy_or_sell_crypto:
+    pick_crypto_amount:
   menu-sounds:
     menu-open:
     menu-close:

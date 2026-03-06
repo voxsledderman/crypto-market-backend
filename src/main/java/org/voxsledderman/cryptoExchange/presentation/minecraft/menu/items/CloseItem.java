@@ -10,8 +10,6 @@ import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AbstractItem;
 
 public class CloseItem extends AbstractItem {
-
-
     @Override
     public ItemProvider getItemProvider(){
         return new ItemBuilder(Material.BARRIER).setDisplayName("Exit exchange");

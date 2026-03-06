@@ -8,7 +8,7 @@ import org.voxsledderman.cryptoExchange.domain.repositories.EconomyRepository;
 import org.voxsledderman.cryptoExchange.domain.repositories.WalletRepository;
 import org.voxsledderman.cryptoExchange.infrastructure.config.manager.AppConfigManager;
 import org.voxsledderman.cryptoExchange.infrastructure.config.manager.MenuConfigManager;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
 import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
 import xyz.xenondevs.invui.gui.Gui;
@@ -17,19 +17,18 @@ import xyz.xenondevs.invui.window.Window;
 @Getter
 public abstract class Menu  {
    private Window window;
-   private final JavaPlugin plugin;
    private final MenuType menuType;
-   private final MenuContext menuContext;
-    public Menu(JavaPlugin plugin, MenuContext menuContext, MenuType menuType) {
-        this.plugin = plugin;
+   private final MenuFactory menuFactory;
+
+    public Menu(MenuType menuType, MenuFactory menuFactory) {
         this.menuType = menuType;
-        this.menuContext = menuContext;
+        this.menuFactory = menuFactory;
 
     }
 
     public Component setupTitle(){
         return getMenuConfigManager().getTitleByType(menuType);
-    };
+    }
 
    public abstract Gui setupGui();
 
@@ -43,20 +42,23 @@ public abstract class Menu  {
     }
 
     protected AppConfigManager getAppConfigManager(){
-        return menuContext.getAppConfigManager();
+        return menuFactory.getMenuContext().getAppConfigManager();
     }
 
     protected MenuConfigManager getMenuConfigManager(){
-        return menuContext.getMenuConfigManager();
+        return menuFactory.getMenuContext().getMenuConfigManager();
     }
 
     protected EconomyRepository getEconomyRepository(){
-        return menuContext.getEconomyRepository();
+        return menuFactory.getMenuContext().getEconomyRepository();
     }
 
     protected WalletRepository getWalletRepository(){
-        return menuContext.getWalletRepository();
+        return menuFactory.getMenuContext().getWalletRepository();
     }
 
+    protected JavaPlugin getPlugin(){
+        return menuFactory.getPlugin();
+    }
 
 }

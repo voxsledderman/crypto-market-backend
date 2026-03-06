@@ -1,103 +1,46 @@
 package org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
 import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
-import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
-import org.voxsledderman.cryptoExchange.domain.services.WalletCalculator;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.CryptoInfo;
-import org.voxsledderman.cryptoExchange.presentation.formatters.PriceFormatter;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.BuySellCryptoMenu;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.Menu;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.PortfolioMenu;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.providers.TradeItemProvider;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
-import xyz.xenondevs.invui.item.ItemProvider;
-import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AutoUpdateItem;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TradeItem extends AutoUpdateItem {
     private final Wallet wallet;
     private final String ticker;
-    private final MenuContext menuContext;
-    private final PriceProvider priceProvider;
-    private final JavaPlugin plugin;
+    private final PositionState positionState;
+    private final MenuFactory menuFactory;
 
-
-
-    public TradeItem(Wallet wallet, String ticker, PositionState positionState, MenuContext menuContext, PriceProvider priceProvider, JavaPlugin plugin) {
+    public TradeItem(Wallet wallet, String ticker, PositionState positionState, MenuFactory menuFactory) {
         super(3 * 20, () -> {
-            CryptoInfo cryptoInfo = priceProvider.getCurrentData(ticker);
-            return getProvider(wallet, ticker, cryptoInfo, positionState);
+            CryptoInfo cryptoInfo = menuFactory.getPriceProvider().getCurrentData(ticker);
+            return TradeItemProvider.createProvider(wallet, ticker, cryptoInfo, positionState);
         });
         this.wallet = wallet;
-        this.menuContext = menuContext;
-        this.priceProvider = priceProvider;
-        this.plugin = plugin;
         this.ticker = ticker;
-    }
-
-
-    public static ItemProvider getProvider(Wallet wallet, String ticker, CryptoInfo cryptoInfo, PositionState positionState){
-        String cryptoValue = PriceFormatter.formatMoney(WalletCalculator.getSingleCryptoValue(wallet, ticker, cryptoInfo, positionState));
-        String roi = PriceFormatter.formatPercentage(WalletCalculator.getSingleCryptoROI(wallet, ticker, cryptoInfo, positionState).toString());
-        AtomicInteger temp = new AtomicInteger(1);
-
-        ItemBuilder builder = new ItemBuilder(Material.BOOK);
-        builder.setDisplayName(cryptoInfo.fullName() + " x"  + WalletCalculator.getTotalAmountOfCryptoAcquired(wallet, ticker, positionState));
-        builder.addLoreLines(
-                "total value: %s >> %s".formatted(
-                       cryptoValue , roi));
-        wallet.getOrders().get(ticker)
-                .forEach(
-                        trade -> {
-                            if(trade.getPositionState().equals(positionState)) {
-                                BigDecimal profitPercent = trade.getProfit(cryptoInfo.price())
-                                        .divide(trade.getTradeValueOnOpen(), 6, RoundingMode.HALF_DOWN)
-                                        .multiply(new BigDecimal("100"));
-                                if(positionState != PositionState.OPENED){
-                                    if(trade.getClosedValue() != null) {
-                                        profitPercent = trade.getClosedValue()
-                                                .subtract(trade.getTradeValueOnOpen())
-                                                .divide(trade.getTradeValueOnOpen(), 6, RoundingMode.HALF_DOWN)
-                                                .multiply(new BigDecimal("100"));
-                                    }
-                                }
-                                if(positionState == PositionState.OPENED) {
-                                    builder.addLoreLines(
-                                            "%s. %s x%s %s >> %s".formatted(temp.getAndIncrement(), cryptoInfo.fullName(), trade.getAmount(),
-                                                    PriceFormatter.formatMoney(trade.getTradeValueNow(cryptoInfo.price())),
-                                                    PriceFormatter.formatPercentage(profitPercent.toString()))
-                                    );
-                                } else {
-                                    builder.addLoreLines(
-                                            "%s. %s x%s %s >> %s".formatted(temp.getAndIncrement(), cryptoInfo.fullName(), trade.getAmount(),
-                                                    PriceFormatter.formatMoney(trade.getClosedValue()),
-                                                    PriceFormatter.formatPercentage(profitPercent.toString())
-                                                    )
-                                    );
-                                }
-                            }
-                        }
-                );
-        return builder;
+        this.positionState = positionState;
+        this.menuFactory = menuFactory;
     }
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
-       Menu menu = new BuySellCryptoMenu(MenuType.BUY_OR_SELL_CRYPTO, new CryptoItem(
-               ticker, priceProvider, menuContext, plugin), BigDecimal.ZERO, priceProvider, wallet,
-               new PortfolioMenu(MenuType.OPENED_POSITIONS, wallet, priceProvider, PositionState.OPENED, menuContext, plugin)
-               );
-       menu.openMenu(player);
+        CryptoItem cryptoItem = new CryptoItem(ticker, menuFactory);
+        MenuType menuType = positionState == PositionState.OPENED
+                ? MenuType.OPENED_POSITIONS : MenuType.CLOSED_POSITIONS;
+
+        Menu backMenu = menuFactory.createPortfolioMenu(menuType, wallet, positionState);
+        Menu buySellMenu = menuFactory.createBuySellCryptoMenu(cryptoItem, BigDecimal.ZERO, wallet, backMenu);
+
+        buySellMenu.openMenu(player);
     }
 }

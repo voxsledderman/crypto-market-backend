@@ -20,6 +20,7 @@ import org.voxsledderman.cryptoExchange.infrastructure.config.manager.AppConfigM
 import org.voxsledderman.cryptoExchange.infrastructure.config.manager.MenuConfigManager;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.BinanceWebSocketProvider;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.command.ExchangeCommand;
 
 import java.sql.SQLException;
@@ -61,7 +62,7 @@ public final class CryptoExchangePlugin extends JavaPlugin {
             binanceWebSocketProvider = new BinanceWebSocketProvider(appConfigManager.getTrackedTickers(), appConfigManager.getQuoteCurrency());
             this.liteCommands = LiteBukkitFactory.builder("voxsledderman", this)
                     .commands(
-                            new ExchangeCommand(new MenuContext(appConfigManager, menuConfigManager, walletRepository, economyRepository), binanceWebSocketProvider, this)
+                            new ExchangeCommand(new MenuFactory(new MenuContext(appConfigManager, menuConfigManager, walletRepository, economyRepository), this, binanceWebSocketProvider))
                     )
                     .message(LiteMessages.MISSING_PERMISSIONS, permission -> "§cNie masz permisji na wykonanie tej komendy!")
                     .message(LiteMessages.INVALID_USAGE, invalidUsage ->  "§cNiepoprawne użycie komendy!")

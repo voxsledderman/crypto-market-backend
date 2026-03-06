@@ -1,70 +1,39 @@
 package org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items;
 
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.voxsledderman.cryptoExchange.CryptoExchangePlugin;
-import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
+import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
 import org.voxsledderman.cryptoExchange.infrastructure.providers.CryptoInfo;
-import org.voxsledderman.cryptoExchange.presentation.formatters.PriceFormatter;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.BuySellCryptoMenu;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.MainMenu;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.Menu;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
-import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
-import xyz.xenondevs.invui.item.ItemProvider;
-import xyz.xenondevs.invui.item.builder.ItemBuilder;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.providers.CryptoItemProvider;
 import xyz.xenondevs.invui.item.impl.AutoUpdateItem;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Getter
 public class CryptoItem extends AutoUpdateItem {
-    private final MenuContext menuContext;
-    private final JavaPlugin plugin;
     private final String ticker;
+    private final MenuFactory menuFactory;
 
-
-    public CryptoItem(String ticker, PriceProvider priceProvider, MenuContext menuContext, JavaPlugin plugin) {
+    public CryptoItem(String ticker, MenuFactory menuFactory) {
         super(20 * 2, () -> {
-            CryptoInfo cryptoInfo = priceProvider.getCurrentData(ticker);
-           return createProvider(cryptoInfo);
+            CryptoInfo cryptoInfo = menuFactory.getPriceProvider().getCurrentData(ticker);
+            return CryptoItemProvider.createProvider(cryptoInfo);
         });
-        this.menuContext = menuContext;
-        this.plugin = plugin;
         this.ticker = ticker;
-    }
-
-
-    private static ItemProvider createProvider(CryptoInfo info) {
-        return new ItemBuilder(Material.GOLD_NUGGET)
-                .setDisplayName(info.fullName())
-                .setLore(List.of(
-                        new AdventureComponentWrapper(
-                                Component.text("Price: %s".formatted(PriceFormatter.formatMoney(info.price())))
-                        ),
-                        new AdventureComponentWrapper(
-                                Component.text("24h change: %s".formatted(PriceFormatter.formatPercentage(info.changePercent())))
-                        )
-                ));
+        this.menuFactory = menuFactory;
     }
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
-        var exchange = (CryptoExchangePlugin) plugin; //TODO: xd
-        PriceProvider priceProvider = exchange.getBinanceWebSocketProvider();
+        Wallet wallet =  menuFactory.getMenuContext().getWalletRepository().findByUuid(player.getUniqueId()).orElse(null);
+        if(wallet == null) return;
+        Menu menu = menuFactory.createBuySellCryptoMenu(this, BigDecimal.ZERO, wallet, menuFactory.createMainMenu(player));
 
-        Menu menu = new BuySellCryptoMenu(MenuType.BUY_OR_SELL_CRYPTO,  this, BigDecimal.ZERO,
-                priceProvider, menuContext.getWalletRepository().findByUuid(player.getUniqueId()).orElse(null),
-                new MainMenu(menuContext, player, priceProvider, exchange)
-                );
         menu.openMenu(player);
     }
 }

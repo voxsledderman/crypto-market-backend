@@ -1,63 +1,34 @@
 package org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.voxsledderman.cryptoExchange.application.usecases.GetOrCreateWalletUseCase;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
 import org.voxsledderman.cryptoExchange.domain.entities.enums.PositionState;
-import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
-import org.voxsledderman.cryptoExchange.domain.services.WalletCalculator;
-import org.voxsledderman.cryptoExchange.presentation.formatters.PriceFormatter;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuFactory;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.Menu;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.PortfolioMenu;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.providers.WalletItemProvider;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
-import xyz.xenondevs.invui.item.ItemProvider;
-import xyz.xenondevs.invui.item.builder.ItemBuilder;
 import xyz.xenondevs.invui.item.impl.AutoUpdateItem;
 
 import java.util.UUID;
 
 public class WalletItem extends AutoUpdateItem {
    private final Wallet wallet;
-   private final PriceProvider priceProvider;
-   private final MenuContext menuContext;
-   private final JavaPlugin plugin;
+   private final MenuFactory menuFactory;
 
-    public WalletItem(UUID uuid , PriceProvider priceProvider, MenuContext menuContext, GetOrCreateWalletUseCase getOrCreateWalletUseCase, JavaPlugin plugin) {
-        super(3 * 20, () -> createProvider(priceProvider, menuContext, getOrCreateWalletUseCase.getOrCreateWallet(uuid)));
-        this.priceProvider = priceProvider;
-        this.menuContext = menuContext;
-        this.plugin = plugin;
+    public WalletItem(UUID uuid , MenuFactory menuFactory ,GetOrCreateWalletUseCase getOrCreateWalletUseCase) {
+        super(3 * 20, () -> WalletItemProvider.createProvider(menuFactory.getPriceProvider(), menuFactory.getMenuContext(), getOrCreateWalletUseCase.getOrCreateWallet(uuid)));
+        this.menuFactory = menuFactory;
         wallet = getOrCreateWalletUseCase.getOrCreateWallet(uuid);
-    }
-
-
-    public static ItemProvider createProvider(PriceProvider priceProvider, MenuContext menuContext, Wallet wallet){
-        var tickers = priceProvider.getFullMarketData(menuContext.getAppConfigManager().getTrackedTickers());
-
-        String currentValue = PriceFormatter.formatMoney(
-                WalletCalculator.getCurrentPortfolioValue(wallet, tickers));
-        String roi = PriceFormatter.formatPercentage(WalletCalculator.getCurrentROI(wallet, tickers).toString());
-
-        ItemBuilder builder = new ItemBuilder(Material.BOOK);
-        builder.setDisplayName("Your portfolio");
-        builder.addLoreLines(" ", "Portfolio value: %s (%s)".formatted(currentValue, roi));
-
-        return builder;
     }
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
-        if(wallet.getOrders().isEmpty()){
-            return;
-        }
-        Menu menu = new PortfolioMenu(MenuType.OPENED_POSITIONS, wallet,
-                priceProvider, PositionState.OPENED, menuContext, plugin);
+        if(wallet.getOrders().isEmpty()) return;
+        Menu menu = menuFactory.createPortfolioMenu(MenuType.OPENED_POSITIONS, wallet, PositionState.OPENED);
         menu.openMenu(player);
     }
 }
