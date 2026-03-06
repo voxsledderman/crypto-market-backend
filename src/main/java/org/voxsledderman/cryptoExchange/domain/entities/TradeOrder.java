@@ -22,8 +22,9 @@ public class TradeOrder {
     private BigDecimal openPrice;
     private LocalDateTime openTime;
     private PositionState positionState;
+    private BigDecimal closedValue;
 
-    private BigDecimal getTradeValueOnOpen(){
+    public BigDecimal getTradeValueOnOpen(){
         return amount.multiply(openPrice);
     }
     public BigDecimal getTradeValueNow(BigDecimal currentPrice){

@@ -88,7 +88,7 @@ class WalletCalculatorTest {
     @Test
     void shouldCalculateSingleCryptoValueCorrectly() {
         var btcInfo = cryptoInfoMap.get("BTC");
-        var result = WalletCalculator.getSingleCryptoValue(wallet, "BTC", btcInfo);
+        var result = WalletCalculator.getSingleCryptoValue(wallet, "BTC", btcInfo, PositionState.OPENED);
         assertEquals(0, result.compareTo(BigDecimal.valueOf(40)));
     }
 
@@ -102,7 +102,7 @@ class WalletCalculatorTest {
     @Test
     void shouldCalculateSingleCryptoROICorrectly() {
         var btcInfo = cryptoInfoMap.get("BTC");
-        var result = WalletCalculator.getSingleCryptoROI(wallet, "BTC", btcInfo);
+        var result = WalletCalculator.getSingleCryptoROI(wallet, "BTC", btcInfo, PositionState.OPENED);
         assertEquals(0, result.compareTo(new BigDecimal("100.000000")));
     }
 
@@ -141,7 +141,7 @@ class WalletCalculatorTest {
     @Test
     void shouldHandleTickerNotPresentInWallet() {
         CryptoInfo dogeInfo = new CryptoInfo("Dogecoin", BigDecimal.valueOf(1), "5");
-        var result = WalletCalculator.getSingleCryptoValue(wallet, "DOGE", dogeInfo);
+        var result = WalletCalculator.getSingleCryptoValue(wallet, "DOGE", dogeInfo, PositionState.OPENED);
 
         assertEquals(0, result.compareTo(BigDecimal.ZERO));
     }
@@ -216,7 +216,7 @@ class WalletCalculatorTest {
 
     @Test
     void shouldHandleNullCryptoInfoInSingleMethods() {
-        var result = WalletCalculator.getSingleCryptoValue(wallet, "BTC", null);
+        var result = WalletCalculator.getSingleCryptoValue(wallet, "BTC", null, PositionState.OPENED);
 
         assertEquals(0, result.compareTo(BigDecimal.ZERO));
     }

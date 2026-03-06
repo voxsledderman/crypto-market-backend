@@ -45,7 +45,8 @@ public class BuyCryptoUseCase {
                     buyerId, dto.amount(),
                     dto.currentPricePerUnit(),
                     LocalDateTime.now(),
-                    PositionState.OPENED
+                    PositionState.OPENED,
+                    null
             ));
             walletRepository.save(wallet);
         } catch (Exception e){

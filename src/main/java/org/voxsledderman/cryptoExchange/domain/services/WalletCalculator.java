@@ -59,12 +59,16 @@ public class WalletCalculator {
                 .multiply(BigDecimal.valueOf(100));
     }
 
-    public static BigDecimal getSingleCryptoValue(Wallet wallet, String ticker, CryptoInfo cryptoInfo) {
+    public static BigDecimal getSingleCryptoValue(Wallet wallet, String ticker, CryptoInfo cryptoInfo, PositionState positionState) {
         if (wallet.getOrders() == null || cryptoInfo == null || cryptoInfo.price() == null) return BigDecimal.ZERO;
 
         return wallet.getOrders().getOrDefault(ticker, List.of()).stream()
                 .filter(Objects::nonNull)
-                .map(trade -> trade.getTradeValueNow(cryptoInfo.price()))
+                .filter(trade -> trade.getPositionState() == positionState)
+                .map(trade -> {
+                    if(positionState == PositionState.OPENED) return trade.getTradeValueNow(cryptoInfo.price());
+                    else return trade.getClosedValue();
+                })
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -74,19 +78,25 @@ public class WalletCalculator {
 
         return wallet.getOrders().getOrDefault(ticker, List.of()).stream()
                 .filter(Objects::nonNull)
+                .filter(trade -> trade.getPositionState() == PositionState.OPENED)
                 .map(trade -> trade.getProfit(cryptoInfo.price()))
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public static BigDecimal getSingleCryptoROI(Wallet wallet, String ticker, CryptoInfo cryptoInfo) {
-        BigDecimal totalEarnings = getSingleCryptoEarnings(wallet, ticker, cryptoInfo);
-        BigDecimal cryptoValue = getSingleCryptoValue(wallet, ticker, cryptoInfo);
-        BigDecimal invested = cryptoValue.subtract(totalEarnings);
+    public static BigDecimal getSingleCryptoROI(Wallet wallet, String ticker, CryptoInfo cryptoInfo, PositionState positionState) {
+        BigDecimal cryptoValue = getSingleCryptoValue(wallet, ticker, cryptoInfo, positionState);
+
+        BigDecimal invested = wallet.getOrders().getOrDefault(ticker, List.of()).stream()
+                .filter(Objects::nonNull)
+                .filter(trade -> trade.getPositionState() == positionState)
+                .map(TradeOrder::getTradeValueOnOpen)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (invested.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
 
-        return totalEarnings
+        BigDecimal earnings = cryptoValue.subtract(invested);
+        return earnings
                 .divide(invested, 6, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
     }

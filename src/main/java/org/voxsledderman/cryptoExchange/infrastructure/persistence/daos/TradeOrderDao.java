@@ -40,4 +40,7 @@ public class TradeOrderDao {
     @DatabaseField(columnName = "position_state", canBeNull = false)
     private PositionState positionState;
 
+    @DatabaseField(columnName = "closed_value")
+    private BigDecimal closedValue;
+
 }

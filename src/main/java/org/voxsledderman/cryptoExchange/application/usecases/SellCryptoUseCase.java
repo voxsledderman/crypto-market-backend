@@ -41,6 +41,7 @@ public class SellCryptoUseCase {
             if (amount.compareTo(amountToClose) <= 0) {
                 closeTradeOrderAndGiveMoney(sellerId, wallet, trade);
                 amountToClose = amountToClose.subtract(amount);
+                if (amountToClose.compareTo(BigDecimal.ZERO) == 0) break;
             } else {
                 TradeOrder partial = buildPartialOrder(trade, amountToClose);
                 trade.setAmount(amount.subtract(amountToClose));
@@ -84,19 +85,21 @@ public class SellCryptoUseCase {
     }
 
     private void closeTradeOrderAndGiveMoney(UUID sellerId, Wallet wallet, TradeOrder tradeOrder) {
-        BigDecimal totalValue = tradeOrder.getTradeValueNow(priceProvider.getCurrentData(tradeOrder.getTicker()).price());
-        if (totalValue.compareTo(BigDecimal.ZERO) <= 0) {
+        BigDecimal currentValue = tradeOrder.getTradeValueNow(priceProvider.getCurrentData(tradeOrder.getTicker()).price());
+        if (currentValue.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalStateException("Trade value must be greater than zero, ticker: " + tradeOrder.getTicker());
         }
-        if (!economyRepository.deposit(sellerId, totalValue)) {
+        if (!economyRepository.deposit(sellerId, currentValue)) {
             throw new IllegalStateException("Failed to deposit funds for seller: " + sellerId);
         }
         try {
             tradeOrder.setPositionState(PositionState.CLOSED);
+            tradeOrder.setClosedValue(currentValue);
             walletRepository.save(wallet);
         } catch (Exception e) {
-            economyRepository.withdraw(sellerId, totalValue);
+            economyRepository.withdraw(sellerId, currentValue);
             tradeOrder.setPositionState(PositionState.OPENED);
+            tradeOrder.setClosedValue(null);
             throw new IllegalStateException("Sell failed after deposit — funds reverted", e);
         }
     }

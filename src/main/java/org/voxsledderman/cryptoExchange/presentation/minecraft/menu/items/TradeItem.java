@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
@@ -49,24 +48,44 @@ public class TradeItem extends AutoUpdateItem {
 
 
     public static ItemProvider getProvider(Wallet wallet, String ticker, CryptoInfo cryptoInfo, PositionState positionState){
-        String cryptoValue = PriceFormatter.formatMoney(WalletCalculator.getSingleCryptoValue(wallet, ticker, cryptoInfo));
-        String roi = PriceFormatter.formatPercentage(WalletCalculator.getSingleCryptoROI(wallet, ticker, cryptoInfo).toString());
+        String cryptoValue = PriceFormatter.formatMoney(WalletCalculator.getSingleCryptoValue(wallet, ticker, cryptoInfo, positionState));
+        String roi = PriceFormatter.formatPercentage(WalletCalculator.getSingleCryptoROI(wallet, ticker, cryptoInfo, positionState).toString());
         AtomicInteger temp = new AtomicInteger(1);
 
         ItemBuilder builder = new ItemBuilder(Material.BOOK);
         builder.setDisplayName(cryptoInfo.fullName() + " x"  + WalletCalculator.getTotalAmountOfCryptoAcquired(wallet, ticker, positionState));
         builder.addLoreLines(
-                "total value: %s - (%s)".formatted(
+                "total value: %s >> %s".formatted(
                        cryptoValue , roi));
         wallet.getOrders().get(ticker)
                 .forEach(
                         trade -> {
                             if(trade.getPositionState().equals(positionState)) {
-                                var currentValue = trade.getTradeValueNow(cryptoInfo.price());
-                                builder.addLoreLines(
-                                        "%s. %s x%s %s >> %s".formatted(temp.getAndIncrement(), cryptoInfo.fullName(), trade.getAmount() ,PriceFormatter.formatMoney(currentValue)
-                                                , PriceFormatter.formatPercentage(trade.getProfit(currentValue.divide(trade.getAmount(), RoundingMode.HALF_DOWN)).toString()))
-                                );
+                                BigDecimal profitPercent = trade.getProfit(cryptoInfo.price())
+                                        .divide(trade.getTradeValueOnOpen(), 6, RoundingMode.HALF_DOWN)
+                                        .multiply(new BigDecimal("100"));
+                                if(positionState != PositionState.OPENED){
+                                    if(trade.getClosedValue() != null) {
+                                        profitPercent = trade.getClosedValue()
+                                                .subtract(trade.getTradeValueOnOpen())
+                                                .divide(trade.getTradeValueOnOpen(), 6, RoundingMode.HALF_DOWN)
+                                                .multiply(new BigDecimal("100"));
+                                    }
+                                }
+                                if(positionState == PositionState.OPENED) {
+                                    builder.addLoreLines(
+                                            "%s. %s x%s %s >> %s".formatted(temp.getAndIncrement(), cryptoInfo.fullName(), trade.getAmount(),
+                                                    PriceFormatter.formatMoney(trade.getTradeValueNow(cryptoInfo.price())),
+                                                    PriceFormatter.formatPercentage(profitPercent.toString()))
+                                    );
+                                } else {
+                                    builder.addLoreLines(
+                                            "%s. %s x%s %s >> %s".formatted(temp.getAndIncrement(), cryptoInfo.fullName(), trade.getAmount(),
+                                                    PriceFormatter.formatMoney(trade.getClosedValue()),
+                                                    PriceFormatter.formatPercentage(profitPercent.toString())
+                                                    )
+                                    );
+                                }
                             }
                         }
                 );
