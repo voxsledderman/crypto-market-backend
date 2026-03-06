@@ -5,11 +5,7 @@ import org.voxsledderman.cryptoExchange.application.usecases.BuyCryptoUseCase;
 import org.voxsledderman.cryptoExchange.application.usecases.SellCryptoUseCase;
 import org.voxsledderman.cryptoExchange.domain.entities.Wallet;
 import org.voxsledderman.cryptoExchange.domain.market.PriceProvider;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.BuyItem;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.CryptoItem;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.PickAmountItem;
-import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.SellItem;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.items.*;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
 import xyz.xenondevs.invui.gui.Gui;
 
@@ -21,26 +17,30 @@ public class BuySellCryptoMenu extends Menu{
     private final PriceProvider priceProvider;
     private final Wallet wallet;
     private final String ticker;
+    private final Menu turnBackMenu;
 
-    public BuySellCryptoMenu(MenuContext menuContext, MenuType menuType, CryptoItem cryptoItem, BigDecimal pickedAmount, JavaPlugin plugin, PriceProvider priceProvider, Wallet wallet, String ticker) {
-        super(plugin, menuContext, menuType);
+    public BuySellCryptoMenu(MenuType menuType, CryptoItem cryptoItem, BigDecimal pickedAmount, PriceProvider priceProvider, Wallet wallet, Menu turnBackMenu) {
+        super(cryptoItem.getPlugin(), cryptoItem.getMenuContext(), menuType);
         this.cryptoItem = cryptoItem;
         this.pickedAmount = pickedAmount;
         this.priceProvider = priceProvider;
         this.wallet = wallet;
-        this.ticker = ticker;
+        this.ticker = cryptoItem.getTicker();
+        this.turnBackMenu = turnBackMenu;
     }
 
     @Override
     public Gui setupGui() {
         return Gui.normal()
                 .setStructure(
-                        "b b b b . s s s s",
+                        "b b b b . s s s E",
                         "b b b b C s s s s",
-                        ". b b b H s s s ."
+                        "B b b b H s s s s"
                 )
                 .addIngredient('C', cryptoItem)
-                .addIngredient('H', new PickAmountItem(pickedAmount, getPlugin(), getMenuContext(), cryptoItem, ticker))
+                .addIngredient('H', new PickAmountItem(pickedAmount, getPlugin(), getMenuContext(), cryptoItem, turnBackMenu))
+                .addIngredient('B', new TurnBackItem(turnBackMenu))
+                .addIngredient('E', new CloseItem())
                 .addIngredient('b', new BuyItem(new BuyCryptoUseCase(
                         getWalletRepository(), getEconomyRepository(), getAppConfigManager()
                 ), pickedAmount, getPlugin(), wallet, ticker, priceProvider.getCurrentData(ticker)))

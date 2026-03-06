@@ -27,14 +27,14 @@ public class PickAmountItem extends AbstractItem {
     private final JavaPlugin plugin;
     private final MenuContext menuContext;
     private final CryptoItem cryptoItem;
-    private final String ticker;
+    private final Menu turnBackMenu;
 
-    public PickAmountItem(BigDecimal pickedAmount, JavaPlugin plugin, MenuContext menuContext, CryptoItem cryptoItem, String ticker) {
+    public PickAmountItem(BigDecimal pickedAmount, JavaPlugin plugin, MenuContext menuContext, CryptoItem cryptoItem, Menu turnBackMenu) {
         this.pickedAmount = pickedAmount;
         this.plugin = plugin;
         this.menuContext = menuContext;
         this.cryptoItem = cryptoItem;
-        this.ticker = ticker;
+        this.turnBackMenu = turnBackMenu;
     }
 
     @Override
@@ -72,8 +72,10 @@ public class PickAmountItem extends AbstractItem {
                         List<AnvilGUI.ResponseAction> actions = new ArrayList<>();
                         actions.add(AnvilGUI.ResponseAction.close());
 
-                        Menu menu = new BuySellCryptoMenu(menuContext, MenuType.BUY_OR_SELL_CRYPTO, cryptoItem, newAmount, plugin,
-                                exchange.getBinanceWebSocketProvider(), menuContext.getWalletRepository().findByUuid(player.getUniqueId()).orElse(null), ticker);
+                        Menu menu = new BuySellCryptoMenu(MenuType.BUY_OR_SELL_CRYPTO, cryptoItem, newAmount,
+                                exchange.getBinanceWebSocketProvider(),
+                                menuContext.getWalletRepository().findByUuid(player.getUniqueId()).orElse(null), turnBackMenu
+                                );
                         menu.openMenu(player);
                         return actions;
 

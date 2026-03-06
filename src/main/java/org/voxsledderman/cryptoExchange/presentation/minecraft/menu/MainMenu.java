@@ -41,22 +41,22 @@ public class MainMenu extends Menu{
                 .stream()
                 .sorted((a, b) -> Double.compare(b.getValue().price().doubleValue(), a.getValue().price().doubleValue()))
                 .forEach(entry -> cryptoItems.add(new CryptoItem(
-                        entry.getKey(), priceProvider, getMenuContext(), getPlugin(), entry.getKey()
+                        entry.getKey(), priceProvider, getMenuContext(), getPlugin()
                 )));
 
         return PagedGui.items()
                 .setStructure(
-                        "P . . . . . . . ." ,
+                        "P . . . . . . . E" ,
                         ". . C C C C C . ." ,
-                        "B . C C C C C . N" ,
+                        "< . C C C C C . >" ,
                         ". . C C C C C . ." ,
-                        "E . . . . . . . ."
+                        ". . . . . . . . ."
 
                 )
                 .addIngredient('C', Markers.CONTENT_LIST_SLOT_HORIZONTAL)
-                .addIngredient('E', new CloseItem(new ItemBuilder(Material.RED_STAINED_GLASS_PANE).setDisplayName("Close menu")))
-                .addIngredient('B', new BackItem(false))
-                .addIngredient('N', new NextItem(true))
+                .addIngredient('E', new CloseItem())
+                .addIngredient('<', new BackItem(false))
+                .addIngredient('>', new NextItem(true))
                 .addIngredient('P', new WalletItem(player.getUniqueId(),  priceProvider, getMenuContext(), new GetOrCreateWalletUseCase(getWalletRepository()), getPlugin()))
                 .setContent(cryptoItems)
                 .build();

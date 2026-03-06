@@ -14,6 +14,7 @@ import org.voxsledderman.cryptoExchange.infrastructure.providers.CryptoInfo;
 import org.voxsledderman.cryptoExchange.presentation.formatters.PriceFormatter;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.MenuContext;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.BuySellCryptoMenu;
+import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.MainMenu;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.Menu;
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
 import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper;
@@ -31,14 +32,14 @@ public class CryptoItem extends AutoUpdateItem {
     private final String ticker;
 
 
-    public CryptoItem(String ticker, PriceProvider priceProvider, MenuContext menuContext, JavaPlugin plugin, String ticker1) {
+    public CryptoItem(String ticker, PriceProvider priceProvider, MenuContext menuContext, JavaPlugin plugin) {
         super(20 * 2, () -> {
             CryptoInfo cryptoInfo = priceProvider.getCurrentData(ticker);
            return createProvider(cryptoInfo);
         });
         this.menuContext = menuContext;
         this.plugin = plugin;
-        this.ticker = ticker1;
+        this.ticker = ticker;
     }
 
 
@@ -58,8 +59,12 @@ public class CryptoItem extends AutoUpdateItem {
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
         var exchange = (CryptoExchangePlugin) plugin; //TODO: xd
-        Menu menu = new BuySellCryptoMenu(menuContext, MenuType.BUY_OR_SELL_CRYPTO, this, BigDecimal.ZERO, plugin,
-                exchange.getBinanceWebSocketProvider(), menuContext.getWalletRepository().findByUuid(player.getUniqueId()).orElse(null), ticker);
+        PriceProvider priceProvider = exchange.getBinanceWebSocketProvider();
+
+        Menu menu = new BuySellCryptoMenu(MenuType.BUY_OR_SELL_CRYPTO,  this, BigDecimal.ZERO,
+                priceProvider, menuContext.getWalletRepository().findByUuid(player.getUniqueId()).orElse(null),
+                new MainMenu(menuContext, player, priceProvider, exchange)
+                );
         menu.openMenu(player);
     }
 }

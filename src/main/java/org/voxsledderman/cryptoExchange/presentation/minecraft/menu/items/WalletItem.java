@@ -18,25 +18,26 @@ import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.PortfolioMen
 import org.voxsledderman.cryptoExchange.presentation.minecraft.menu.tittle.MenuType;
 import xyz.xenondevs.invui.item.ItemProvider;
 import xyz.xenondevs.invui.item.builder.ItemBuilder;
-import xyz.xenondevs.invui.item.impl.AbstractItem;
+import xyz.xenondevs.invui.item.impl.AutoUpdateItem;
 
 import java.util.UUID;
 
-public class WalletItem extends AbstractItem {
+public class WalletItem extends AutoUpdateItem {
    private final Wallet wallet;
    private final PriceProvider priceProvider;
    private final MenuContext menuContext;
    private final JavaPlugin plugin;
 
     public WalletItem(UUID uuid , PriceProvider priceProvider, MenuContext menuContext, GetOrCreateWalletUseCase getOrCreateWalletUseCase, JavaPlugin plugin) {
+        super(3 * 20, () -> createProvider(priceProvider, menuContext, getOrCreateWalletUseCase.getOrCreateWallet(uuid)));
         this.priceProvider = priceProvider;
         this.menuContext = menuContext;
         this.plugin = plugin;
         wallet = getOrCreateWalletUseCase.getOrCreateWallet(uuid);
     }
 
-    @Override
-    public ItemProvider getItemProvider(){
+
+    public static ItemProvider createProvider(PriceProvider priceProvider, MenuContext menuContext, Wallet wallet){
         var tickers = priceProvider.getFullMarketData(menuContext.getAppConfigManager().getTrackedTickers());
 
         String currentValue = PriceFormatter.formatMoney(
