@@ -1,0 +1,108 @@
+<svg width="860" height="400" viewBox="0 0 860 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>text { font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace; }</style>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0.5 L0,5.5 L6,3 z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <!-- PRESENTATION -->
+  <rect x="0" y="0" width="860" height="70" rx="6" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <rect x="0" y="0" width="3" height="70" rx="1.5" fill="#EAB300"/>
+  <text x="14" y="17" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="2">PRESENTATION</text>
+  <text x="14" y="30" font-size="9" fill="#8b949e">Minecraft layer — GUI menus, commands, formatters</text>
+  <g font-size="9" fill="#EAB300">
+    <rect x="14" y="36" width="112" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="70" y="52" text-anchor="middle">ExchangeCommand</text>
+    <rect x="136" y="36" width="88" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="180" y="52" text-anchor="middle">MainMenu</text>
+    <rect x="234" y="36" width="120" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="294" y="52" text-anchor="middle">BuySellCryptoMenu</text>
+    <rect x="364" y="36" width="104" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="416" y="52" text-anchor="middle">PortfolioMenu</text>
+    <rect x="478" y="36" width="124" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="540" y="52" text-anchor="middle">AdminSettingsMenu</text>
+    <rect x="612" y="36" width="116" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="670" y="52" text-anchor="middle">AnvilAmountPicker</text>
+    <rect x="738" y="36" width="108" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="792" y="52" text-anchor="middle">MenuFactory</text>
+  </g>
+
+  <line x1="430" y1="70" x2="430" y2="86" stroke="#8b949e" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <!-- APPLICATION -->
+  <rect x="0" y="90" width="860" height="70" rx="6" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <rect x="0" y="90" width="3" height="70" rx="1.5" fill="#EAB300"/>
+  <text x="14" y="107" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="2">APPLICATION</text>
+  <text x="14" y="120" font-size="9" fill="#8b949e">Use cases — no Minecraft, no DB, no framework</text>
+  <g font-size="9" fill="#EAB300">
+    <rect x="14" y="126" width="128" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="78" y="142" text-anchor="middle">BuyCryptoUseCase</text>
+    <rect x="152" y="126" width="128" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="216" y="142" text-anchor="middle">SellCryptoUseCase</text>
+    <rect x="290" y="126" width="168" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="374" y="142" text-anchor="middle">GetOrCreateWalletUseCase</text>
+    <rect x="468" y="126" width="108" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="522" y="142" text-anchor="middle">CryptoAssetDto</text>
+    <rect x="586" y="126" width="108" height="26" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="640" y="142" text-anchor="middle">CryptoCurrency</text>
+  </g>
+
+  <line x1="430" y1="160" x2="430" y2="176" stroke="#8b949e" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <!-- DOMAIN -->
+  <rect x="0" y="180" width="860" height="70" rx="6" fill="#EAB30018" stroke="#EAB300" stroke-width="1.5"/>
+  <rect x="0" y="180" width="3" height="70" rx="1.5" fill="#EAB300"/>
+  <text x="14" y="197" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="2">DOMAIN</text>
+  <text x="14" y="210" font-size="9" fill="#8b949e">Pure business logic — zero external dependencies</text>
+  <g font-size="9" fill="#EAB300">
+    <rect x="14" y="216" width="72" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="50" y="232" text-anchor="middle">Wallet</text>
+    <rect x="96" y="216" width="96" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="144" y="232" text-anchor="middle">TradeOrder</text>
+    <rect x="202" y="216" width="136" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="270" y="226" text-anchor="middle">PriceProvider</text>
+    <text x="270" y="237" text-anchor="middle" font-size="8" fill="#8b949e">«interface»</text>
+    <rect x="348" y="216" width="136" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="416" y="226" text-anchor="middle">WalletRepository</text>
+    <text x="416" y="237" text-anchor="middle" font-size="8" fill="#8b949e">«interface»</text>
+    <rect x="494" y="216" width="148" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="568" y="226" text-anchor="middle">EconomyRepository</text>
+    <text x="568" y="237" text-anchor="middle" font-size="8" fill="#8b949e">«interface»</text>
+    <rect x="652" y="216" width="128" height="26" rx="3" fill="#EAB30015" stroke="#EAB300" stroke-width="1"/>
+    <text x="716" y="232" text-anchor="middle">WalletCalculator</text>
+  </g>
+
+  <line x1="430" y1="250" x2="430" y2="266" stroke="#8b949e" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <!-- INFRASTRUCTURE -->
+  <rect x="0" y="270" width="860" height="80" rx="6" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <rect x="0" y="270" width="3" height="80" rx="1.5" fill="#EAB300"/>
+  <text x="14" y="287" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="2">INFRASTRUCTURE</text>
+  <text x="14" y="300" font-size="9" fill="#8b949e">Implements domain interfaces — DB, WebSocket, config, Vault</text>
+  <g font-size="9" fill="#EAB300">
+    <rect x="14" y="306" width="152" height="36" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="90" y="320" text-anchor="middle">BinanceWebSocketProvider</text>
+    <text x="90" y="333" text-anchor="middle" font-size="8" fill="#8b949e">→ PriceProvider</text>
+
+    <rect x="176" y="306" width="140" height="36" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="246" y="320" text-anchor="middle">CachedWalletRepository</text>
+    <text x="246" y="333" text-anchor="middle" font-size="8" fill="#8b949e">→ WalletRepository</text>
+
+    <rect x="326" y="306" width="148" height="36" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="400" y="320" text-anchor="middle">OrmLiteWalletRepository</text>
+    <text x="400" y="333" text-anchor="middle" font-size="8" fill="#8b949e">SQLite / MySQL · ORMLite</text>
+
+    <rect x="484" y="306" width="144" height="36" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="556" y="320" text-anchor="middle">VaultEconomyRepository</text>
+    <text x="556" y="333" text-anchor="middle" font-size="8" fill="#8b949e">→ EconomyRepository</text>
+
+    <rect x="638" y="306" width="132" height="36" rx="3" fill="#EAB30008" stroke="#EAB30050" stroke-width="1"/>
+    <text x="704" y="320" text-anchor="middle">ApplicationBootstrap</text>
+    <text x="704" y="333" text-anchor="middle" font-size="8" fill="#8b949e">config · DB init · DI</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="0" y="368" width="860" height="32" rx="4" fill="#EAB30008" stroke="#EAB30030" stroke-width="1"/>
+  <text x="20" y="388" font-size="9" fill="#8b949e">Dependency rule: each layer depends only on the layer below it. Domain has no external dependencies.</text>
+</svg>

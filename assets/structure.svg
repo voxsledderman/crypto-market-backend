@@ -1,0 +1,148 @@
+<svg width="860" height="490" viewBox="0 0 860 490" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>text { font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', monospace; }</style>
+  </defs>
+
+  <!-- Header bar -->
+  <rect width="860" height="36" rx="6" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <circle cx="16" cy="18" r="5" fill="#EAB30040" stroke="#EAB30060" stroke-width="1"/>
+  <circle cx="34" cy="18" r="5" fill="#EAB30040" stroke="#EAB30060" stroke-width="1"/>
+  <circle cx="52" cy="18" r="5" fill="#EAB300" stroke="#EAB300" stroke-width="1"/>
+  <text x="430" y="23" text-anchor="middle" font-size="10" fill="#8b949e" letter-spacing="0.3">src/main/java/org/voxsledderman/cryptoExchange/</text>
+
+  <!-- Column headers -->
+  <rect x="0"   y="44" width="200" height="24" rx="4" fill="#EAB30018" stroke="#EAB300" stroke-width="1"/>
+  <text x="100" y="60" text-anchor="middle" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="1.5">domain/</text>
+
+  <rect x="210" y="44" width="200" height="24" rx="4" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <text x="310" y="60" text-anchor="middle" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="1.5">application/</text>
+
+  <rect x="420" y="44" width="214" height="24" rx="4" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <text x="527" y="60" text-anchor="middle" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="1.5">infrastructure/</text>
+
+  <rect x="644" y="44" width="216" height="24" rx="4" fill="#EAB30010" stroke="#EAB30060" stroke-width="1"/>
+  <text x="752" y="60" text-anchor="middle" font-size="9" fill="#EAB300" font-weight="700" letter-spacing="1.5">presentation/</text>
+
+  <!-- ── DOMAIN ── -->
+  <g font-size="9">
+    <text x="10" y="90" fill="#8b949e">entities/</text>
+    <rect x="0" y="96" width="200" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="10" y="109" fill="#EAB300">Wallet</text>
+    <text x="10" y="120" fill="#EAB300">TradeOrder  ·  PositionState</text>
+
+    <text x="10" y="142" fill="#8b949e">market/</text>
+    <rect x="0" y="148" width="200" height="40" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="10" y="161" fill="#EAB300">CryptoInfo  ·  QuoteCurrency</text>
+    <text x="10" y="173" fill="#EAB300">PriceProvider</text>
+    <text x="10" y="183" fill="#8b949e" font-size="8">  «interface»</text>
+
+    <text x="10" y="205" fill="#8b949e">repositories/</text>
+    <rect x="0" y="211" width="200" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="10" y="224" fill="#EAB300">WalletRepository  «interface»</text>
+    <text x="10" y="235" fill="#EAB300">EconomyRepository  «interface»</text>
+
+    <text x="10" y="257" fill="#8b949e">services/</text>
+    <rect x="0" y="263" width="200" height="20" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="10" y="276" fill="#EAB300">WalletCalculator</text>
+
+    <text x="10" y="298" fill="#8b949e">validators/</text>
+    <rect x="0" y="304" width="200" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="10" y="317" fill="#EAB300">MarketConfigValidator</text>
+    <text x="10" y="328" fill="#EAB300">MySqlValidator</text>
+  </g>
+
+  <!-- ── APPLICATION ── -->
+  <g font-size="9">
+    <text x="220" y="90" fill="#8b949e">dtos/</text>
+    <rect x="210" y="96" width="200" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="220" y="109" fill="#EAB300">CryptoAssetDto</text>
+    <text x="220" y="120" fill="#EAB300">CryptoCurrency</text>
+
+    <text x="220" y="142" fill="#8b949e">usecases/</text>
+    <rect x="210" y="148" width="200" height="40" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="220" y="161" fill="#EAB300">BuyCryptoUseCase</text>
+    <text x="220" y="173" fill="#EAB300">SellCryptoUseCase</text>
+    <text x="220" y="183" fill="#EAB300">GetOrCreateWalletUseCase</text>
+  </g>
+
+  <!-- ── INFRASTRUCTURE ── -->
+  <g font-size="9">
+    <text x="430" y="90" fill="#8b949e">config/</text>
+    <rect x="420" y="96" width="214" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="430" y="109" fill="#EAB300">ApplicationBootstrap</text>
+    <text x="430" y="120" fill="#EAB300">MySqlConnectionData</text>
+
+    <text x="440" y="142" fill="#8b949e">└ manager/</text>
+    <rect x="432" y="148" width="202" height="30" rx="3" fill="#EAB30005" stroke="#EAB30030" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="442" y="161" fill="#EAB300">AppConfigManager</text>
+    <text x="442" y="172" fill="#EAB300">MenuConfigManager</text>
+
+    <text x="430" y="194" fill="#8b949e">database/</text>
+    <rect x="420" y="200" width="214" height="30" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="430" y="213" fill="#EAB300">MySqlConnectionFactory</text>
+    <text x="430" y="224" fill="#EAB300">SQLiteConnectionFactory</text>
+
+    <text x="430" y="246" fill="#8b949e">persistence/</text>
+    <rect x="420" y="252" width="214" height="60" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="430" y="265" fill="#8b949e">daos/</text>
+    <text x="440" y="277" fill="#EAB300">WalletDao  ·  TradeOrderDao</text>
+    <text x="430" y="291" fill="#8b949e">mappers/</text>
+    <text x="440" y="303" fill="#EAB300">WalletMapper  ·  TradeOrderMapper</text>
+
+    <text x="430" y="328" fill="#8b949e">providers/</text>
+    <rect x="420" y="334" width="214" height="20" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="430" y="347" fill="#EAB300">BinanceWebSocketProvider</text>
+  </g>
+
+  <!-- ── PRESENTATION ── -->
+  <g font-size="9">
+    <text x="654" y="90" fill="#8b949e">command/</text>
+    <rect x="644" y="96" width="216" height="20" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="654" y="109" fill="#EAB300">ExchangeCommand</text>
+
+    <text x="654" y="132" fill="#8b949e">menu/</text>
+    <rect x="644" y="138" width="216" height="72" rx="3" fill="#EAB30008" stroke="#EAB30040" stroke-width="1"/>
+    <text x="654" y="151" fill="#EAB300">MainMenu</text>
+    <text x="654" y="163" fill="#EAB300">BuySellCryptoMenu</text>
+    <text x="654" y="175" fill="#EAB300">PortfolioMenu</text>
+    <text x="654" y="187" fill="#EAB300">AdminSettingsMenu</text>
+    <text x="654" y="199" fill="#EAB300">AnvilAmountPicker</text>
+
+    <text x="664" y="226" fill="#8b949e">└ items/</text>
+    <rect x="656" y="232" width="204" height="72" rx="3" fill="#EAB30005" stroke="#EAB30030" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="666" y="245" fill="#EAB300">CryptoItem  ·  BuyItem</text>
+    <text x="666" y="257" fill="#EAB300">SellItem  ·  WalletItem</text>
+    <text x="666" y="269" fill="#EAB300">TradeItem  ·  BackItem</text>
+    <text x="666" y="281" fill="#EAB300">NextItem  ·  StateFilterItem</text>
+    <text x="666" y="293" fill="#EAB300">PickAmountItem  ·  ...</text>
+
+    <text x="664" y="320" fill="#8b949e">└ providers/</text>
+    <rect x="656" y="326" width="204" height="42" rx="3" fill="#EAB30005" stroke="#EAB30030" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="666" y="339" fill="#EAB300">CryptoItemProvider</text>
+    <text x="666" y="351" fill="#EAB300">TradeItemProvider</text>
+    <text x="666" y="363" fill="#EAB300">WalletItemProvider  ·  ...</text>
+  </g>
+
+  <!-- Vertical dividers -->
+  <line x1="206" y1="44" x2="206" y2="380" stroke="#EAB30020" stroke-width="1"/>
+  <line x1="416" y1="44" x2="416" y2="380" stroke="#EAB30020" stroke-width="1"/>
+  <line x1="640" y1="44" x2="640" y2="380" stroke="#EAB30020" stroke-width="1"/>
+
+  <!-- Footer -->
+  <line x1="0" y1="390" x2="860" y2="390" stroke="#EAB30030" stroke-width="1"/>
+
+  <rect x="0"   y="400" width="264" height="76" rx="4" fill="#EAB30008" stroke="#EAB30030" stroke-width="1"/>
+  <text x="10" y="417" font-size="9" fill="#8b949e">src/main/resources/</text>
+  <text x="10" y="432" font-size="9" fill="#EAB300">config.yml</text>
+  <text x="10" y="446" font-size="9" fill="#EAB300">plugin.yml</text>
+
+  <rect x="274" y="400" width="310" height="76" rx="4" fill="#EAB30008" stroke="#EAB30030" stroke-width="1"/>
+  <text x="284" y="417" font-size="9" fill="#8b949e">src/test/java/</text>
+  <text x="284" y="432" font-size="9" fill="#EAB300">TradeOrderTest.java</text>
+  <text x="284" y="446" font-size="9" fill="#EAB300">WalletCalculatorTest.java</text>
+
+  <rect x="594" y="400" width="266" height="76" rx="4" fill="#EAB30008" stroke="#EAB30030" stroke-width="1"/>
+  <text x="604" y="417" font-size="9" fill="#8b949e">root/</text>
+  <text x="604" y="432" font-size="9" fill="#EAB300">build.gradle  ·  settings.gradle</text>
+  <text x="604" y="446" font-size="9" fill="#EAB300">gradlew  ·  gradle.properties</text>
+</svg>
